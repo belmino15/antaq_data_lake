@@ -3,42 +3,8 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.empty import EmptyOperator
 
-import requests, os
-
-def safe_open_wb(path):
-    ''' Open "path" for writing, creating any parent directories as needed.
-    '''
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    return open(path, 'wb')
-
-def captura_dados_atracacao():
-
-    years = [2017, 2018, 2019]
-    path_atracacao = "data/raw/atracacao"
-
-    for year in years:
-        url = f"https://web3.antaq.gov.br/ea/txt/{year}Atracacao.zip"
-        response = requests.get(url)
-
-        path_fileName = os.path.join(path_atracacao, f'{year}Atracacao.zip')
-
-        with safe_open_wb(path_fileName) as arquivo:
-            arquivo.write(response.content)
-
-
-def captura_dados_carga():
-
-    years = [2017, 2018, 2019]
-    path_atracacao = "data/raw/carga"
-
-    for year in years:
-        url = f"https://web3.antaq.gov.br/ea/txt/{year}Carga.zip"
-        response = requests.get(url)
-
-        path_fileName = os.path.join(path_atracacao, f'{year}Carga.zip')
-
-        with safe_open_wb(path_fileName) as arquivo:
-            arquivo.write(response.content)
+from functions.captura_dados_atracacao import captura_dados_atracacao
+from functions.captura_dados_carga import captura_dados_carga
 
 def extrai_dados_atracacao():
     # Insira aqui o código para extrair dados dos arquivos capturados
