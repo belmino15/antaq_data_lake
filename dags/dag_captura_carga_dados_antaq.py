@@ -3,21 +3,54 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.empty import EmptyOperator
 
-def captura_dados_atracao():
-    # Insira aqui o código para capturar dados de atração
-    print('Dados de atração capturados')
+import requests, os
+
+def safe_open_wb(path):
+    ''' Open "path" for writing, creating any parent directories as needed.
+    '''
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    return open(path, 'wb')
+
+def captura_dados_atracacao():
+
+    years = [2017, 2018, 2019]
+    path_atracacao = "data/raw/atracacao"
+
+    for year in years:
+        url = f"https://web3.antaq.gov.br/ea/txt/{year}Atracacao.zip"
+        response = requests.get(url)
+
+        path_fileName = os.path.join(path_atracacao, f'{year}Atracacao.zip')
+
+        with safe_open_wb(path_fileName) as arquivo:
+            arquivo.write(response.content)
+
 
 def captura_dados_carga():
-    # Insira aqui o código para capturar dados de carga
-    print('Dados de carga capturados')
+
+    years = [2017, 2018, 2019]
+    path_atracacao = "data/raw/carga"
+
+    for year in years:
+        url = f"https://web3.antaq.gov.br/ea/txt/{year}Carga.zip"
+        response = requests.get(url)
+
+        path_fileName = os.path.join(path_atracacao, f'{year}Carga.zip')
+
+        with safe_open_wb(path_fileName) as arquivo:
+            arquivo.write(response.content)
+
+def extrai_dados_atracacao():
+    # Insira aqui o código para extrair dados dos arquivos capturados
+    print('Dados extraídos')
+
+def extrai_dados_carga():
+    # Insira aqui o código para extrair dados dos arquivos capturados
+    print('Dados extraídos')
 
 def verifica_captura():
     # Insira aqui o código para verificar se os dados foram capturados corretamente
     print('Dados verificados')
-
-def extrai_dados():
-    # Insira aqui o código para extrair dados dos arquivos capturados
-    print('Dados extraídos')
 
 def transforma_dados_atracacao():
     # Insira aqui o código para transformar os dados de atração
@@ -54,9 +87,9 @@ start_task = EmptyOperator(
         task_id='start'
         )
 
-captura_dados_atracao = PythonOperator(
+captura_dados_atracacao = PythonOperator(
     task_id='captura_dados_atracao',
-    python_callable=captura_dados_atracao,
+    python_callable=captura_dados_atracacao,
     dag=dag
     )
 
@@ -72,9 +105,15 @@ verifica_captura = PythonOperator(
     dag=dag
     )
 
-extrai_dados = PythonOperator(
-    task_id='extrai_dados',
-    python_callable=extrai_dados,
+extrai_dados_atracacao = PythonOperator(
+    task_id='extrai_dados_atracacao',
+    python_callable=extrai_dados_atracacao,
+    dag=dag
+    )
+
+extrai_dados_carga = PythonOperator(
+    task_id='extrai_dados_carga',
+    python_callable=extrai_dados_carga,
     dag=dag
     )
 
@@ -108,7 +147,10 @@ envia_email_conclusao = PythonOperator(
     dag=dag
     )
 
-start_task >> [captura_dados_atracao, captura_dados_carga] >> verifica_captura >> extrai_dados >> [transforma_dados_atracacao, transforma_dados_carga]
+start_task >> [captura_dados_atracacao, captura_dados_carga]
+captura_dados_atracacao >> extrai_dados_atracacao
+captura_dados_carga >> extrai_dados_carga
+[extrai_dados_atracacao, extrai_dados_carga] >> verifica_captura >> [transforma_dados_atracacao, transforma_dados_carga]
 transforma_dados_atracacao >> carrega_dados_atracacao
 transforma_dados_carga >> carrega_dados_carga
 [carrega_dados_atracacao, carrega_dados_carga] >> envia_email_conclusao
