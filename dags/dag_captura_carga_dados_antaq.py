@@ -9,17 +9,12 @@ from functions.captura_dados_carga import captura_dados_carga
 from functions.extrai_dados_atracacao import extrai_dados_atracacao
 from functions.extrai_dados_carga import extrai_dados_carga
 
+from functions.transforma_dados_atracacao import transforma_dados_atracacao
+from functions.transforma_dados_carga import transforma_dados_carga
+
 def verifica_captura():
     # Insira aqui o código para verificar se os dados foram capturados corretamente
     print('Dados verificados')
-
-def transforma_dados_atracacao():
-    # Insira aqui o código para transformar os dados de atração
-    print('Dados de atração transformados')
-
-def transforma_dados_carga():
-    # Insira aqui o código para transformar os dados de carga
-    print('Dados de carga transformados')
 
 def carrega_dados_atracacao():
     # Insira aqui o código para carregar os dados de atração em um banco de dados
@@ -40,7 +35,8 @@ default_args = {
 dag = DAG(
     'captura_carga_dados_antaq',
     default_args=default_args,
-    start_date=datetime(2022, 5, 28),
+    start_date=datetime(2023, 4, 20),
+    schedule_interval=None,
     description='DAG do Airflow para Captura, Transformacao e Carga de dados da Antaq'
     )
 
