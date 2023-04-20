@@ -6,13 +6,8 @@ from airflow.operators.empty import EmptyOperator
 from functions.captura_dados_atracacao import captura_dados_atracacao
 from functions.captura_dados_carga import captura_dados_carga
 
-def extrai_dados_atracacao():
-    # Insira aqui o código para extrair dados dos arquivos capturados
-    print('Dados extraídos')
-
-def extrai_dados_carga():
-    # Insira aqui o código para extrair dados dos arquivos capturados
-    print('Dados extraídos')
+from functions.extrai_dados_atracacao import extrai_dados_atracacao
+from functions.extrai_dados_carga import extrai_dados_carga
 
 def verifica_captura():
     # Insira aqui o código para verificar se os dados foram capturados corretamente
