@@ -2,6 +2,7 @@ from datetime import datetime
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.empty import EmptyOperator
+from airflow.operators.email_operator import EmailOperator
 
 from functions.captura_dados_atracacao import captura_dados_atracacao
 from functions.captura_dados_carga import captura_dados_carga
@@ -12,17 +13,14 @@ from functions.extrai_dados_carga import extrai_dados_carga
 from functions.transforma_dados_atracacao import transforma_dados_atracacao
 from functions.transforma_dados_carga import transforma_dados_carga
 
+from functions.carrega_dados_atracacao import carrega_dados_atracacao
+from functions.carrega_dados_carga import carrega_dados_carga
+
+email = 'lucas.belmino15@gmail.com'
+
 def verifica_captura():
     # Insira aqui o código para verificar se os dados foram capturados corretamente
     print('Dados verificados')
-
-def carrega_dados_atracacao():
-    # Insira aqui o código para carregar os dados de atração em um banco de dados
-    print('Dados de atração carregados')
-
-def carrega_dados_carga():
-    # Insira aqui o código para carregar os dados de carga em um banco de dados
-    print('Dados de carga carregados')
 
 def envia_email_conclusao():
     # Insira aqui o código para enviar um email informando que a DAG foi concluída
