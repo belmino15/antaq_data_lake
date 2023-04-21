@@ -3,7 +3,8 @@ version: '3.4'
 
 x-common:
   &common
-  image: apache/airflow:2.3.0
+  # image: apache/airflow:2.5.3
+  build: .
   user: "${AIRFLOW_UID}:0"
   env_file: 
     - .env
@@ -11,6 +12,7 @@ x-common:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
+    - ./data:/opt/airflow/data
     - /var/run/docker.sock:/var/run/docker.sock
 
 x-depends-on:
@@ -67,3 +69,13 @@ services:
         mkdir -p /sources/logs /sources/dags /sources/plugins
         chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
         exec /entrypoint airflow version
+
+  sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "SqlServer2019!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: 'Developer'
+    ports:
+      - "1433:1433"
