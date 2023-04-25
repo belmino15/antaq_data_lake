@@ -7,7 +7,7 @@ def carrega_dados_carga():
     df = pd.read_csv('data/silver/carga.txt', delimiter=';')
     df = df.where(df.notnull(), None)
 
-    df = df.head(100000)
+    df = df.head(300000)
 
     # Inserir os dados na tabela
 
@@ -32,13 +32,18 @@ def carrega_dados_carga():
             FlagAutorizacao VARCHAR(255),
             FlagCabotagem INT,
             FlagCabotagemMovimentacao INT,
-            FlagConteinerTamanho VARCHAR(255)
+            FlagConteinerTamanho VARCHAR(255),
+            Ano_da_data_de_inicio_da_operacao_atracacao INT,
+            Mes_da_data_de_inicio_da_operacao_atracacao VARCHAR(50),
         );
         """)
     
     with conn.cursor() as cursor:
-        for row in df.itertuples(index=False):
-            cursor.execute("""
+        i = 0
+        quant_linhas = 10000
+        while i < df.shape[0]:
+            tup = list(df.iloc[i:i+quant_linhas, :].itertuples(index=False))
+            cursor.executemany("""
             INSERT INTO carga (
                 IDCarga,
                 IDAtracacao,
@@ -52,10 +57,14 @@ def carrega_dados_carga():
                 FlagAutorizacao,
                 FlagCabotagem,
                 FlagCabotagemMovimentacao,
-                FlagConteinerTamanho
-                )
-                VALUES(%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %s);
-                """, row)
+                FlagConteinerTamanho,
+                Ano_da_data_de_inicio_da_operacao_atracacao,
+                Mes_da_data_de_inicio_da_operacao_atracacao
+                ) VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %s, %d, %s)
+            """, tup)
+            i+=quant_linhas
+
+            print(i)
 
     conn.commit()
     cursor.close()
