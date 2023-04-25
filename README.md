@@ -13,5 +13,5 @@ Esse repositório cria uma pipeline de Dados que Captura dados do Antaq e dispon
     - https://web3.antaq.gov.br/ea/sense/download.html#pt
 - Para criar a infraestrutura utilize o comando `docker-compose up -d --build`
 - A connection com o Banco de Dados deve ser configurada assim:
-![connection_sql_server](connection_sql_server.png)
+![connection_sql_server](questoes/connection_sql_server.png)
 - O envio de emails é realizado pelo serviço MailTrap.
