@@ -4,7 +4,6 @@ on:
   push:
     branches: [master, homologation] # Change to your desired branch name
 
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
