@@ -10,21 +10,12 @@ from functions.captura_dados_carga import captura_dados_carga
 from functions.extrai_dados_atracacao import extrai_dados_atracacao
 from functions.extrai_dados_carga import extrai_dados_carga
 
-from functions.transforma_dados_atracacao import transforma_dados_atracacao
-from functions.transforma_dados_carga import transforma_dados_carga
+from functions.transforma_dados import transforma_dados
 
 from functions.carrega_dados_atracacao import carrega_dados_atracacao
 from functions.carrega_dados_carga import carrega_dados_carga
 
 email = 'lucas.belmino15@gmail.com'
-
-def verifica_captura():
-    # Insira aqui o código para verificar se os dados foram capturados corretamente
-    print('Dados verificados')
-
-def envia_email_conclusao():
-    # Insira aqui o código para enviar um email informando que a DAG foi concluída
-    print('Email de conclusão enviado')
 
 default_args = {
     'owner': 'airflow',
@@ -35,8 +26,8 @@ default_args = {
 dag = DAG(
     'captura_carga_dados_antaq',
     default_args=default_args,
-    start_date=datetime(2023, 4, 20),
-    schedule_interval=None,
+    start_date=datetime(2023, 4, 5),
+    schedule_interval='@monthly',
     description='DAG do Airflow para Captura, Transformacao e Carga de dados da Antaq'
     )
 
@@ -68,15 +59,9 @@ extrai_dados_carga_task = PythonOperator(
     dag=dag
     )
 
-transforma_dados_atracacao_task = PythonOperator(
-    task_id='transforma_dados_atracacao',
-    python_callable=transforma_dados_atracacao,
-    dag=dag
-    )
-
-transforma_dados_carga_task = PythonOperator(
-    task_id='transforma_dados_carga',
-    python_callable=transforma_dados_carga,
+transforma_dados_task = PythonOperator(
+    task_id='transforma_dados',
+    python_callable=transforma_dados,
     dag=dag
     )
 
@@ -101,6 +86,8 @@ envia_email_conclusao_task = EmailOperator(
 )
 
 start_task >> [captura_dados_atracacao_task, captura_dados_carga_task]
-captura_dados_atracacao_task >> extrai_dados_atracacao_task >> transforma_dados_atracacao_task >> carrega_dados_atracacao_task
-captura_dados_carga_task >> extrai_dados_carga_task >> transforma_dados_carga_task >> carrega_dados_carga_task
+captura_dados_atracacao_task >> extrai_dados_atracacao_task
+captura_dados_carga_task >> extrai_dados_carga_task
+[extrai_dados_atracacao_task, extrai_dados_carga_task] >> transforma_dados_task
+transforma_dados_task >> [carrega_dados_atracacao_task, carrega_dados_carga_task]
 [carrega_dados_atracacao_task, carrega_dados_carga_task] >> envia_email_conclusao_task
