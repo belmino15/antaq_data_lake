@@ -24,4 +24,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: belmino15/airflow_kubernetes_${{ github.ref_slug }}:latest
+        tags: belmino15/airflow_kubernetes:latest
