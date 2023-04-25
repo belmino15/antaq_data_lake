@@ -56,12 +56,6 @@ captura_dados_carga_task = PythonOperator(
     dag=dag
     )
 
-verifica_captura_task = PythonOperator(
-    task_id='verifica_captura',
-    python_callable=verifica_captura,
-    dag=dag
-    )
-
 extrai_dados_atracacao_task = PythonOperator(
     task_id='extrai_dados_atracacao',
     python_callable=extrai_dados_atracacao,
@@ -107,9 +101,6 @@ envia_email_conclusao_task = EmailOperator(
 )
 
 start_task >> [captura_dados_atracacao_task, captura_dados_carga_task]
-captura_dados_atracacao_task >> extrai_dados_atracacao_task
-captura_dados_carga_task >> extrai_dados_carga_task
-[extrai_dados_atracacao_task, extrai_dados_carga_task] >> verifica_captura_task >> [transforma_dados_atracacao_task, transforma_dados_carga_task]
-transforma_dados_atracacao_task >> carrega_dados_atracacao_task
-transforma_dados_carga_task >> carrega_dados_carga_task
+captura_dados_atracacao_task >> extrai_dados_atracacao_task >> transforma_dados_atracacao_task >> carrega_dados_atracacao_task
+captura_dados_carga_task >> extrai_dados_carga_task >> transforma_dados_carga_task >> carrega_dados_carga_task
 [carrega_dados_atracacao_task, carrega_dados_carga_task] >> envia_email_conclusao_task
