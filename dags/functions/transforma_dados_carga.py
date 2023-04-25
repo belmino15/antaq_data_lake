@@ -15,14 +15,7 @@ def transforma_dados_carga():
 
     df_concatenado = pd.concat(dataframes, ignore_index=True)
 
-    selected_columns = [
-        'IDCarga', 'IDAtracacao', 'Origem', 'Destino', 'CDMercadoria',
-        'Tipo Operação da Carga', 'Carga Geral Acondicionamento',
-        'ConteinerEstado', 'Tipo Navegação', 'FlagAutorizacao', 'FlagCabotagem',
-        'FlagCabotagemMovimentacao', 'FlagConteinerTamanho'
-    ]
-
-    df_concatenado = df_concatenado[selected_columns]
+    df_concatenado = df_concatenado
 
     os.makedirs(os.path.dirname(silver_path), exist_ok=True)
 
