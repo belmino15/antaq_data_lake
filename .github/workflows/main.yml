@@ -24,4 +24,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: your-dockerhub-username/your-dockerhub-repository:${{ github.ref_slug }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/airflow_kubernetes:${{ github.ref_slug }}
