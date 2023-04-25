@@ -32,12 +32,11 @@ Aqui estão as respostas das questões propostas.
     - extrai_dados_atracacao.py
     - extrai_dados_carga.py
 - **Transformação dos Dados:**
-    - transforma_dados_atracacao.py
-    - transforma_dados_carga.py
+    - transforma_dados.py
 
 ##### c) Criar uma consulta (query) otimizada.
 
-**Resposta:** Para atender os requisitos foi desenvolvida a consulta SQL com o nome: `numero_atracacao_nordeste.sql`. Além disso foram implementados scripts em python que fazem a carga dos dados em um Banco de Dados SQL Server, `carrega_dados_atracacao.py` e  `carrega_dados_carga.py`.
+**Resposta:** Para atender os requisitos foi desenvolvida a consulta SQL com o nome: `numero_atracacao.sql`. Além disso foram implementados scripts em python que fazem a carga dos dados em um Banco de Dados SQL Server, `carrega_dados_atracacao.py` e  `carrega_dados_carga.py`.
 
 ---
 
@@ -67,6 +66,55 @@ O serviço **Mail Trap** foi utilizado para o envio e o recebimento de e-mails. 
 
 **Email após a finalização da pipeline com sucesso:**
 ![email_sucesso](email_sucesso.png)
+
+---
+
+## 4 - Configuração de pipelines de CI/CD com Gitlab ou Github.
+
+A pipeline foi desenvolvida visando criar imagens diferentes no Dockerhub, desta forma, ao fazer o depois do Airflow podemos resgatar versões distintas dos códigos em cada ambiente.
+
+A implementação foi feita utilizando do nome da branch como tag e depois fazendo o push da imagem.
+
+**Abaixo o script da Pipeline:**
+```yml
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [master, homologation] # Change to your desired branch name
+
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - name: Extract branch name
+      shell: bash
+      run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
+      id: extract_branch
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: belmino15/airflow_kubernetes:${{ steps.extract_branch.outputs.branch }}
+
+```
+
+
+**Imagens no repositório no Dockerhub:**
+![dockerhub](dockerhub.png)
 
 ---
 

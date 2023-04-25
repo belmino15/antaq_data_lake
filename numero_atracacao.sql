@@ -9,7 +9,8 @@ with dados_ceara as (
     FROM
     	atracacao
     WHERE
-    	SGUF = 'CE'
+    	SGUF = 'CE' AND
+    	Ano_da_data_de_inicio_da_operacao IN (2018,2019)
     GROUP by
     	SGUF,
     	Mes_da_data_de_inicio_da_operacao,
@@ -26,7 +27,8 @@ dados_nordeste as (
     FROM
     	atracacao
     WHERE
-    	Regiao_Geografica = 'Nordeste'
+    	Regiao_Geografica = 'Nordeste' AND
+    	Ano_da_data_de_inicio_da_operacao IN (2018,2019)
     GROUP by
     	Regiao_Geografica,
     	Mes_da_data_de_inicio_da_operacao,
@@ -45,7 +47,8 @@ dados_brasil as (
     WHERE
     	Regiao_Geografica in (
     			'Nordeste', 'Norte', 'Sul', 'Sudeste', 'Centro-Oeste'
-    		)
+    		) AND
+    	Ano_da_data_de_inicio_da_operacao IN (2018,2019)
     GROUP BY
     	Mes_da_data_de_inicio_da_operacao,
     	Ano_da_data_de_inicio_da_operacao
