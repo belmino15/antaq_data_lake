@@ -6,25 +6,25 @@ Aqui estão as respostas das questões propostas.
 
 ## 1 - Auto-avaliação
 ### Tópicos de Conhecimento:
-- Manipulação e tratamento de dados com Python: 
-- Manipulação e tratamento de dados com Pyspark: 
-- Desenvolvimento de data workflows em Ambiente Azure com databricks: 
-- Desenvolvimento de data workflows com Airflow: 
-- Manipulação de bases de dados NoSQL: 
-- Web crawling e web scraping para mineração de dados: 
-- Construção de APIs: REST, SOAP e Microservices: 
-
+- Manipulação e tratamento de dados com Python: 6
+- Manipulação e tratamento de dados com Pyspark: 6
+- Desenvolvimento de data workflows em Ambiente Azure com databricks: 4
+- Desenvolvimento de data workflows com Airflow: 5
+- Manipulação de bases de dados NoSQL: 3
+- Web crawling e web scraping para mineração de dados: 3
+- Construção de APIs: REST, SOAP e Microservices: 3
+        
 ---
 
 ## 2 - Desenvolvimento de pipelines de ETL de dados com Python, Apache Airflow, Hadoop e Spark.
 ### Supondo que você seja nosso Cientista de dados:
 ##### a) Olhando para todos os dados disponíveis na fonte citada acima, em qual estrutura de banco de dados você orienta guardá-los no nosso Data Lake? SQL ou NoSQL? Discorra sobre sua orientação.
 
-**Resposta:** É possível observar pelo dados, que se tratam de dados estruturados com formato fíxico. Desta forma, recomendaria a utilização de um bando de dados SQL.
+**Resposta:** É possível observar pelo dados, que se tratam de dados estruturados com formato fixo. Desta forma, recomendaria a utilização de um bando de dados SQL.
 
 ##### b) Desenvolva um script em python que extraia os dados do anuário, e transforme-os em duas tabelas fato, atracacao_fato e carga_fato.
 
-**Resposta:** Para atender os requisitos desta questão foram desenvolvidos scripts em python realizando cada um dos passos solicitados. Abaixo a descrição do passo a passo:
+**Resposta:** Para atender os requisitos desta questão foram desenvolvidos scripts em python, localizados na pasta `dags/function`, realizando cada um dos passos solicitados. Abaixo a descrição do passo a passo:
 - **Captura dos Dados:**
     - captura_dados_atracacao.py
     - captura_dados_carga.py
@@ -36,7 +36,7 @@ Aqui estão as respostas das questões propostas.
 
 ##### c) Criar uma consulta (query) otimizada.
 
-**Resposta:** Para atender os requisitos foi desenvolvida a consulta SQL com o nome: `numero_atracacao.sql`. Além disso foram implementados scripts em python que fazem a carga dos dados em um Banco de Dados SQL Server, `carrega_dados_atracacao.py` e  `carrega_dados_carga.py`.
+**Resposta:** Para atender os requisitos foi desenvolvida a consulta SQL com o nome: `numero_atracacao.sql`. Além disso, foram implementados scripts em python, localizados na pasta `dags/function`, que fazem a carga dos dados em um Banco de Dados SQL Server, `carrega_dados_atracacao.py` e  `carrega_dados_carga.py`.
 
 ---
 
@@ -44,7 +44,7 @@ Aqui estão as respostas das questões propostas.
 
 ### Criação do ambiente
 
-Para atender os requisitos desta questão foi elaborado uma infraestrutura em docker visando implementar os serviços de orquestração com o **Airflow** e Banco de dados com o **SQL Server**. Para isso utilizou-se do orquestrador de container Docker Compose. A configuração das aplicações encontre-se no arquivo `docker-compose.yml`. Para subir a infraestrutura utilize o comando:
+Para atender os requisitos desta questão foi elaborado uma infraestrutura em docker visando implementar os serviços de orquestração com o **Airflow** e Banco de dados com o **SQL Server**. Para isso, utilizou-se do orquestrador de container Docker Compose. A configuração das aplicações encontra-se no arquivo `docker-compose.yml`. Para subir a infraestrutura, utilize o comando:
 
 ```bash
 docker-compose up -d --build
@@ -52,7 +52,7 @@ docker-compose up -d --build
 
 ### Pipeline de ETL
 
-A DAG do Airflow encontrasse na pasta `dags` com o nome `dag_captura_carga_dados_antaq.py`. Abaixo temos a sua visualização gráfica.
+A DAG do Airflow encontra-se na pasta `dags` com o nome `dag_captura_carga_dados_antaq.py`. Abaixo, temos a sua visualização gráfica.
 
 **DAG de ETL dos Dados da Antaq:**
 ![pipeline_airflow](pipeline_airflow.png)
@@ -71,9 +71,9 @@ O serviço **Mail Trap** foi utilizado para o envio e o recebimento de e-mails. 
 
 ## 4 - Configuração de pipelines de CI/CD com Gitlab ou Github.
 
-A pipeline foi desenvolvida visando criar imagens diferentes no Dockerhub, desta forma, ao fazer o depois do Airflow podemos resgatar versões distintas dos códigos em cada ambiente.
+A pipeline foi desenvolvida visando criar imagens diferentes no Dockerhub, desta forma, pode-se, depois, resgatar versões distintas dos códigos em cada ambiente.
 
-A implementação foi feita utilizando do nome da branch como tag e depois fazendo o push da imagem.
+A implementação foi feita com o Github Actions que executará a construção da imagem e seu carregamento no repositório do Dockerhub. Foi utilizado o nome da branch como tag para diferenciar cada um dos ambientes de produção.
 
 **Abaixo o script da Pipeline:**
 ```yml
@@ -118,14 +118,14 @@ jobs:
 
 ---
 
-## 5 - Crie script´s de configuração, que seja capaz de implantar um servidor Kuberentes em um Ubuntu Server 20.04 e deploy de um serviço de Airflow.
+## 5 - Crie script´s de configuração, que seja capaz de implantar um servidor Kubernetes em um Ubuntu Server 20.04 e deploy de um serviço de Airflow.
 
 ### Considerações iniciais
-O script de configuração desenvolvido: `script_airflow_kube.sh`
+Script de configuração desenvolvido, localizado na pasta raiz deste repositório: `script_airflow_kube.sh`
 
 Para criar um script de configuração capaz de implantar um servidor Kubernetes em um Ubuntu Server 20.04 e fazer o deploy de um serviço de Airflow, é necessário seguir uma série de passos. Em primeiro lugar, é preciso instalar alguns serviços, como o Docker, Kubectl, Helm e Kind.
 
-Após a instalação desses serviços, é necessário criar um arquivo kind-cluster.yaml para descrever o cluster Kubernetes que será criado pelo Kind. Em seguida, é preciso criar um arquivo Dockerfile para poder instalar diferentes providers necessários para o serviço de Airflow. Por fim, o serviço Airflow pode ser criado usando o comando Helm.
+Após a instalação desses serviços, é necessário criar um arquivo kind-cluster.yaml para descrever o cluster Kubernetes que será criado pelo Kind. Em seguida, é preciso criar um arquivo Dockerfile para poder instalar diferentes providers necessários para o serviço de Airflow. Por fim, o serviço Airflow pode ser criado utilizando o Helm.
 
 O script de configuração foi elaborado seguindo esses passos, garantindo que todos os serviços e arquivos necessários sejam instalados e criados corretamente para que o serviço de Airflow possa ser implantado e executado com sucesso no cluster Kubernetes.
 
@@ -147,8 +147,8 @@ O script de configuração foi elaborado seguindo esses passos, garantindo que t
 - Criação do serviço
     - Utilizamos o Helm para criação do serviço de Airflow
 - Chave SSH e Mapeamento de porta
-    - No final do script é apresentada uma chave SSH, essa chave deve ser copiada em Seu Repositorio Github > Setting > Deploy Key para permitir a aquisição automatica das DAGs.
-    - Por fim é mapeada a porta 8080 do airflow-webserver
+    - No final do script é apresentada uma chave SSH, essa chave deve ser copiada em "Seu Repositorio Github" > Setting > "Deploy Key" para permitir a aquisição automatica das DAGs.
+    - Por fim, é mapeada a porta 8080 do airflow-webserver
 
 ### Script de configuração
 
@@ -266,14 +266,14 @@ sudo kubectl port-forward svc/airflow-webserver --address 0.0.0.0 8080:8080 -n a
 
 ### Considerações finais
 Algumas considerações sobre o script:
-- Visando uma implementação em produção aconselhasse utilizar outra ferramenta, o Kind é uma ferramenta para uso local de clusters Kubernetes e foi primariamente desenhada para testar o Kubernetes.
+- Visando uma implementação em produção aconselha-se utilizar outra ferramenta, o Kind é uma ferramenta para uso local de clusters Kubernetes e foi primariamente desenhada para testar o Kubernetes.
 - A utilização dos privilégios de super usuário com `sudo` pode ser perigosa caso não confie nos scripts executados.
 - A execução do script foi testada em uma Instância do serviço AWS EC2, observações:
     - AMI: Ubuntu Server 20.04 LTS (HVM)
     - Instance Type: t2.xlarge
     - Storage: 50Gb (Usa em geral de 24Gb)
     - É necessário liberar a porta 8080 no Security Group
-    - Copie/Crie o scrip dentro da instancia (com `nano sript.sh`, por exemplo), de permissão ao arquivo `chmod +x sript.sh` e execute `./script.sh`
+    - Copie/Crie o script dentro da instância (com `nano sript.sh`, por exemplo), dê permissão ao arquivo `chmod +x sript.sh` e execute `./script.sh`
 
 
 
