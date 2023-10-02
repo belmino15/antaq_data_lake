@@ -5,7 +5,7 @@ def extrai_dados_atracacao():
 
     path_atracacao = 'data/raw/atracacao'
     path_output = 'data/bronze/atracacao'
-    years = [2017, 2018, 2019]
+    years = [2021, 2022, 2023]
 
     for year in years:
 

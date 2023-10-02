@@ -26,7 +26,7 @@ default_args = {
 dag = DAG(
     'captura_carga_dados_antaq',
     default_args=default_args,
-    start_date=datetime(2023, 4, 5),
+    start_date=datetime(2023, 10, 1),
     schedule_interval='@monthly',
     description='DAG do Airflow para Captura, Transformacao e Carga de dados da Antaq'
     )
@@ -81,7 +81,7 @@ envia_email_conclusao_task = EmailOperator(
         task_id='send_email',
         subject='Airflow Alert',
         to=email,
-        html_content=""" <h3>Air flow Sucessed</h3> """,
+        html_content=""" <h3>Airflow Sucessed</h3> """,
         dag=dag
 )
 

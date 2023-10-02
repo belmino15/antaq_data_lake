@@ -5,7 +5,7 @@ from functions.utils import safe_open_wb
 
 def captura_dados_carga():
 
-    years = [2017, 2018, 2019]
+    years = [2021, 2022, 2023]
     path_atracacao = "data/raw/carga"
 
     for year in years:

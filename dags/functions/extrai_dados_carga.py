@@ -5,7 +5,7 @@ def extrai_dados_carga():
 
     path_carga = 'data/raw/carga'
     path_output = 'data/bronze/carga'
-    years = [2017, 2018, 2019]
+    years = [2021, 2022, 2023]
 
     for year in years:
 
